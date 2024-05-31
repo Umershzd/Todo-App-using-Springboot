@@ -1,11 +1,13 @@
 package com.springbootApp.myFirstSpringBootApp;
 
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 public class Todo {
     private int id;
     private String username;
-
+@Size(min=10,message = "Please enter the description...!")
     private String description;
     private LocalDate targetdate;
     private Boolean done;

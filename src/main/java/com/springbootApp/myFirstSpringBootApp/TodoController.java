@@ -1,7 +1,10 @@
 package com.springbootApp.myFirstSpringBootApp;
 import java.time.LocalDate;
+
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,8 +36,12 @@ model.put("todo",todo);
 return "Todo";
     }
     @RequestMapping(value="add-todo",method = RequestMethod.POST)
-    public String addNewTodo(ModelMap model,Todo todo )
+    public String addNewTodo(ModelMap model, @Valid Todo todo , BindingResult result )
     {
+        if (result.hasErrors())
+        {
+            return "Todo";
+        }
             String username = (String) model.get("name");
             todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusYears(1), false);
             return "redirect:Todos-List";
