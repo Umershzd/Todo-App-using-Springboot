@@ -47,4 +47,11 @@ return "Todo";
             return "redirect:Todos-List";
 
     }
+    @RequestMapping("delete-todo")
+    public String DeleteTodo(@RequestParam int id)
+    {
+        // todo delete logic
+        todoService.deletebyId(id);
+        return "redirect:Todos-List";
+    }
 }
