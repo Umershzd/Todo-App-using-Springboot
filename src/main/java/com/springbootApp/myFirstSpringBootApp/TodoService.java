@@ -13,7 +13,7 @@ public class TodoService {
     private static int todoCount=0;
     static {
         todos.add(new Todo(++todoCount,"Umer","Learn AWS", LocalDate.now().plusYears(1),false));
-        todos.add(new Todo(+todoCount,"Rabia","Learn Java Spring Boot", LocalDate.now().plusYears(3),false));
+        todos.add(new Todo(++todoCount,"Rabia","Learn Java Spring Boot", LocalDate.now().plusYears(3),false));
         todos.add(new Todo(++todoCount,"Arsal","Learn React JS", LocalDate.now().plusYears(2),false));
     }
     public List<Todo> findByUsername(String username)
