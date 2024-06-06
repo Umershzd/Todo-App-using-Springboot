@@ -43,7 +43,7 @@ return "Todo";
             return "Todo";
         }
             String username = (String) model.get("name");
-            todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusYears(1), false);
+            todoService.addTodo(username, todo.getDescription(), todo.getTargetdate(), false);
             return "redirect:Todos-List";
 
     }
