@@ -2,6 +2,8 @@ package com.springbootApp.myFirstSpringBootApp;
 import java.time.LocalDate;
 
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -23,14 +25,20 @@ public class TodoController {
     @RequestMapping("Todos-List")
 public String listAllTodos(ModelMap model)
 {
-List<Todo> todos =todoService.findByUsername("Umer");
+    String username = getName(model);
+    List<Todo> todos =todoService.findByUsername(username);
 model.addAttribute("todos",todos);
     return "ListTodos";
 }
+
+    private static String getName(ModelMap model) {
+        return (String) model.get("name");
+    }
+
     @RequestMapping(value="add-todo",method = RequestMethod.GET)
     public String showNewTodoPage(ModelMap model)
     {
-        String username = (String) model.get("name");
+        String username = getLoggedinUsername(model);
 Todo todo=new Todo(0,username,"default desc",LocalDate.now().plusYears(1),false);
 model.put("todo",todo);
 return "Todo";
@@ -42,7 +50,7 @@ return "Todo";
         {
             return "Todo";
         }
-            String username = (String) model.get("name");
+            String username = getLoggedinUsername(model);
             todoService.addTodo(username, todo.getDescription(), todo.getTargetdate(), false);
             return "redirect:Todos-List";
 
@@ -68,10 +76,15 @@ model.addAttribute("todo",todo);
         {
             return "Todo";
         }
-        String username = (String) model.get("name");
+        String username = getLoggedinUsername(model);
         todo.setUsername(username);
         todoService.updateTodo(todo);
         return "redirect:Todos-List";
 
+    }
+    private String getLoggedinUsername(ModelMap model)
+    {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }
