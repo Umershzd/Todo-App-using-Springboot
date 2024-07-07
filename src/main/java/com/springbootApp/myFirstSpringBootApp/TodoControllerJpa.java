@@ -17,11 +17,11 @@ import java.util.List;
 @Controller
 @SessionAttributes("name")
 public class TodoControllerJpa {
-    private TodoService todoService;
+
 private TodoRepository todoRepository;
-    public TodoControllerJpa(TodoService todoService, TodoRepository todoRepository) {
+    public TodoControllerJpa( TodoRepository todoRepository) {
         super();
-        this.todoService = todoService;
+
         this.todoRepository=todoRepository;
     }
     @RequestMapping("Todos-List")
@@ -53,7 +53,9 @@ return "Todo";
             return "Todo";
         }
             String username = getLoggedinUsername(model);
-            todoService.addTodo(username, todo.getDescription(), todo.getTargetdate(), false);
+        todo.setUsername(username);
+        todoRepository.save(todo);
+
             return "redirect:Todos-List";
 
     }
@@ -61,13 +63,14 @@ return "Todo";
     public String DeleteTodo(@RequestParam int id)
     {
         // todo delete logic
-        todoService.deletebyId(id);
+        todoRepository.deleteById(id);
+
         return "redirect:Todos-List";
     }
     @RequestMapping(value="update-todo",method = RequestMethod.GET)
     public String showUpdateTodoPage(@RequestParam int id,ModelMap model)
     {
-        Todo todo = todoService.findById(id);
+        Todo todo = todoRepository.findById(id).get();
 model.addAttribute("todo",todo);
         return "Todo";
     }
@@ -80,7 +83,7 @@ model.addAttribute("todo",todo);
         }
         String username = getLoggedinUsername(model);
         todo.setUsername(username);
-        todoService.updateTodo(todo);
+ todoRepository.save(todo);
         return "redirect:Todos-List";
 
     }
